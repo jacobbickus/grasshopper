@@ -16,6 +16,7 @@
 #include "G4ParticleTable.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4GDMLParser.hh"
+#include "G4Alpha.hh"
 
 extern G4GDMLParser parser;
 
@@ -31,13 +32,15 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
   G4String particleName;
 
   int  particleNumber=parser.GetConstant("ParticleNumber");
-  //  particle = particleTable->FindParticle(particleName="e-");
-  G4ParticleDefinition *particle = particleTable->FindParticle(particleNumber);
-  //  particle = particleTable->FindParticle(particleName="geantino");
-  particleGun->SetParticleDefinition(particle);
-
-
-  particleGun->SetParticleDefinition(particle);
+  if(particleNumber == 2004)
+  {
+    particleGun->SetParticleDefinition(G4Alpha::Definition());
+  }
+  else
+  {
+    G4ParticleDefinition *particle = particleTable->FindParticle(particleNumber);
+    particleGun->SetParticleDefinition(particle);
+  }
 
   energy = parser.GetQuantity("BeamEnergy");
   if(energy<0){
